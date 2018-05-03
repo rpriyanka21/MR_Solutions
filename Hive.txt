@@ -1,0 +1,25 @@
+create database NYCPT;
+use NYCPT;
+
+create table NYCP(Summons_Number int,Plate_ID int,Registration_State string,Plate_Type string,Issue_Date int,Violation_Code int,Vehicle_Body_Type string,Vehicle_Make string,Issuing_Agency string,Street_Code1 int,Street_Code2 int,Street_Code3 int,Vehicle_Expiration_Date string,Violation_Location int,Violation_Precinct int,Issuer_Precinct int,Issuer_Code int,Issuer_Command int,Violation_Time string,Time_First_Observed string,Violation_County string,Violatio_In_Front_Of_Or_Opposite string,House_Number int,Street_Name string,Intersecting_Street string,Date_First_Observed string,Law_Section int,Sub_Division string,Days_Parking_In_Effect string,From_Hours_In_Effect string,To_Hours_In_Effect string,Vehicle_Color string,Vehicle_Year int,Meter_Number int,Violation_Post_Code int,Violation_Description string) row format delimited fields terminated by ‘,’ tblproperties ("skip.header.line.count”=“1”);
+
+
+LOAD DATA LOCAL INPATH ‘/home/training/Desktop/MTA_Performance_NYCT.csv’ INTO Table nyct;
+
+
+create table nycpt_j2014(Summons_Number int,Plate_ID int,Registration_State string,Plate_Type string,Issue_Date int,Violation_Code int,Vehicle_Body_Type string,Vehicle_Make string,Issuing_Agency string,Street_Code1 int,Street_Code2 int,Street_Code3 int,Vehicle_Expiration_Date string,Violation_Location int,Violation_Precinct int,Issuer_Precinct int,Issuer_Code int,Issuer_Command int,Violation_Time string,Time_First_Observed string,Violation_County string,Violatio_In_Front_Of_Or_Opposite string,House_Number int,Street_Name string,Intersecting_Street string,Date_First_Observed string,Law_Section int,Sub_Division string,Days_Parking_In_Effect string,From_Hours_In_Effect string,To_Hours_In_Effect string,Vehicle_Color string,Vehicle_Year int,Meter_Number int,Violation_Post_Code int,Violation_Description string) row format delimited fields terminated by ‘,’ tblproperties ("skip.header.line.count”=“1”);
+
+
+LOAD DATA LOCAL INPATH ‘/home/training/Desktop/NYPCT_June2014.csv’ INTO Table nycpt_j2014;
+
+ALTER TABLE nycpt_j2014
+ADD (winter_count integer,summer_count integer,spring_count integer);
+
+INSERT INTO nycpt_j2014(winter_count) SELECT COUNT(Issue date where Issue_Date LIKE '[11-3]%' from nycpt_j2014);
+
+INSERT INTO nycpt_j2014(summer_count) SELECT COUNT(Issue date where Issue_Date LIKE '[4-7]%' from nycpt_j2014);
+
+INSERT INTO nycpt_j2014(spring_count) SELECT COUNT(Issue date where Issue_Date LIKE '[8-10]%' from nycpt_j2014);
+
+
+SELECT GREATEST(winter_count,summer_count,spring_count) FROM nycpt_j2014;
